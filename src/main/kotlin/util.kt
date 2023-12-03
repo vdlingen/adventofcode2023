@@ -1,5 +1,4 @@
 @file:Suppress("unused")
-
 package util
 
 fun readInput(filename: String) = object {}.javaClass.getResource("/$filename")!!.readText().trimEnd()
@@ -52,8 +51,18 @@ class Grid(private val data: List<String>) {
     fun Coord.neighbors(directions: List<Direction> = Directions.All) =
         directions.map { it.transform(this) }.filter { it.isValid }
 
+    fun Coord.move(direction: Direction) = direction.transform(this).takeIf { it.isValid }
+
     fun Coord.left() = Direction.Left.transform(this).takeIf { it.isValid }
     fun Coord.right() = Direction.Right.transform(this).takeIf { it.isValid }
     fun Coord.up() = Direction.Up.transform(this).takeIf { it.isValid }
     fun Coord.down() = Direction.Down.transform(this).takeIf { it.isValid }
+
+    fun Coord.lineOfSight(direction: Direction) = buildList {
+        var item = move(direction)
+        while (item != null) {
+            add(item)
+            item = item.move(direction)
+        }
+    }
 }
