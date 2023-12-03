@@ -13,17 +13,17 @@ data class PartNumber(
 
 val partNumbers = with(grid) {
     fun Char.isSymbol() = !isDigit() && this != '.'
-    fun Coord.seesSymbol() = neighbors().any { it.value().isSymbol() }
-    fun Coord.isFirstDigit() = value().isDigit() && left()?.value()?.isDigit() != true
+    fun Coord.seesSymbol() = neighbors().any { it.char.isSymbol() }
+    fun Coord.isFirstDigit() = char.isDigit() && left()?.char?.isDigit() != true
 
     buildList {
-        rows().forEach { row ->
+        rows.forEach { row ->
             row.filter { it.isFirstDigit() }.map { start ->
                 row.subList(start.x, row.size)
-                    .takeWhile { it.value().isDigit() }
+                    .takeWhile { it.char.isDigit() }
                     .takeIf { it.any { it.seesSymbol() } }
                     ?.let { coords ->
-                        val number = coords.map { it.value() }.joinToString(separator = "").toInt()
+                        val number = coords.map { it.char }.joinToString(separator = "").toInt()
                         add(PartNumber(number, coords))
                     }
             }
@@ -34,7 +34,7 @@ val partNumbers = with(grid) {
 fun part1() = partNumbers.sumOf { it.number }
 
 fun part2() = with(grid) {
-    cells().filter { it.value() == '*' }
+    cells.filter { it.char == '*' }
         .map { gear ->
             val neighbors = gear.neighbors()
             partNumbers.filter { it.coords.any { it in neighbors } }
