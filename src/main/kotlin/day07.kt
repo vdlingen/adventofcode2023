@@ -54,13 +54,13 @@ val comparator = Comparator<Hand> { a, b ->
     val bType = b.cards.type()
 
     when {
-        aType.ordinal > bType.ordinal -> 1
-        aType.ordinal < bType.ordinal -> -1
+        aType > bType -> 1
+        aType < bType -> -1
         else -> {
             a.cards.indices.forEach { index ->
                 when {
-                    a.cards[index].ordinal > b.cards[index].ordinal -> return@Comparator 1
-                    a.cards[index].ordinal < b.cards[index].ordinal -> return@Comparator -1
+                    a.cards[index] > b.cards[index] -> return@Comparator 1
+                    a.cards[index] < b.cards[index] -> return@Comparator -1
                 }
             }
 
