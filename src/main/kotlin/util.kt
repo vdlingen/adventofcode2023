@@ -1,4 +1,5 @@
 @file:Suppress("unused")
+
 package util
 
 fun readInput(filename: String) = object {}.javaClass.getResource("/$filename")!!.readText().trimEnd()
@@ -66,3 +67,9 @@ class Grid(private val data: List<String>) {
         }
     }
 }
+
+fun lcm(a: Long, b: Long) = maxOf(a, b).let { largest ->
+    (largest..a * b step largest).find { it % a == 0L && it % b == 0L } ?: (a * b)
+}
+
+fun List<Int>.lcm() = drop(1).fold(first().toLong()) { a, b -> lcm(a, b.toLong()) }
