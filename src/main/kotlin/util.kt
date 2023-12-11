@@ -2,6 +2,8 @@
 
 package util
 
+import kotlin.math.abs
+
 fun readInput(filename: String) = object {}.javaClass.getResource("/$filename")!!.readText().trimEnd()
 
 infix fun Int.upOrDownTo(to: Int): IntProgression {
@@ -58,6 +60,8 @@ class Grid(private val data: List<String>) {
     fun Coord.right() = Direction.Right.transform(this).takeIf { it.isValid }
     fun Coord.up() = Direction.Up.transform(this).takeIf { it.isValid }
     fun Coord.down() = Direction.Down.transform(this).takeIf { it.isValid }
+
+    fun Coord.distance(other: Coord) = abs(other.x - x) + abs(other.y - y)
 
     fun Coord.lineOfSight(direction: Direction) = buildList {
         var item = move(direction)
