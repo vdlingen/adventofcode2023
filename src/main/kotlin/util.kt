@@ -37,7 +37,7 @@ class Directions {
     }
 }
 
-class Grid(private val data: List<String>) {
+data class Grid(private val data: List<String>) {
     val width = data.minOf { it.length }
     val height = data.size
 
