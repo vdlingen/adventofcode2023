@@ -77,9 +77,11 @@ fun part2() = with(input) {
     val destination = rows.last().last()
 
     heatLoss.put(State(start, Direction.Right, 0), 0)
+    heatLoss.put(State(start, Direction.Down, 0), 0)
 
     val queue = LinkedList<State>()
     queue.add(State(start, Direction.Right, 0))
+    queue.add(State(start, Direction.Down, 0))
 
     while (queue.isNotEmpty()) {
         val state = queue.remove()
@@ -89,7 +91,7 @@ fun part2() = with(input) {
             val nextLoss = loss + nextState.position.loss()
 
             if (nextLoss < heatLoss.getOrDefault(nextState, Int.MAX_VALUE)) {
-                heatLoss.put(nextState, nextLoss)
+                heatLoss[nextState] = nextLoss
 
                 if (nextState.position != destination)
                     queue.add(nextState)
