@@ -51,43 +51,25 @@ val parts = input.last().split("\n").map {
 
 fun part1() = parts.filter { workflows["in"]!!.matches(it) }.sumOf { it.values.sum() }
 
-fun Rule.splitRanges(ranges: Map<Char, List<IntRange>>): Pair<Map<Char, List<IntRange>>, Map<Char, List<IntRange>>> {
-    val matches = ranges.mapValues { (key, ranges) ->
-        if (key == variable) {
-            ranges.mapNotNull { range ->
-                when {
-                    range.last < value -> if (operator == '<') range else null
-                    range.first > value -> if (operator == '>') range else null
-
-                    operator == '<' -> range.first..(value - 1)
-                    else -> (value + 1)..range.last
-                }
-            }
-        } else {
-            ranges
+fun Rule.splitRanges(ranges: Map<Char, IntRange>): Pair<Map<Char, IntRange>, Map<Char, IntRange>> {
+    val matches = ranges.mapValues { (key, range) ->
+        when {
+            key == variable -> if (operator == '<') range.first..<value else (value + 1)..range.last
+            else -> range
         }
     }
 
-    val other = ranges.mapValues { (key, ranges) ->
-        if (key == variable) {
-            ranges.mapNotNull { range ->
-                when {
-                    range.last < value -> if (operator == '<') null else range
-                    range.first > value -> if (operator == '>') null else range
-
-                    operator == '>' -> range.first..value
-                    else -> (value)..range.last
-                }
-            }
-        } else {
-            ranges
+    val other = ranges.mapValues { (key, range) ->
+        when {
+            key == variable -> if (operator == '>') range.first..value else value..range.last
+            else -> range
         }
     }
 
     return matches to other
 }
 
-fun Workflow.validRanges(ranges: Map<Char, List<IntRange>>): List<Map<Char, List<IntRange>>> =
+fun Workflow.validRanges(ranges: Map<Char, IntRange>): List<Map<Char, IntRange>> =
     buildList {
         var other = ranges
 
@@ -111,13 +93,13 @@ fun Workflow.validRanges(ranges: Map<Char, List<IntRange>>): List<Map<Char, List
 
 fun part2() = workflows["in"]!!.validRanges(
     mapOf(
-        'x' to listOf(1..4000),
-        'm' to listOf(1..4000),
-        'a' to listOf(1..4000),
-        's' to listOf(1..4000),
+        'x' to 1..4000,
+        'm' to 1..4000,
+        'a' to 1..4000,
+        's' to 1..4000,
     )
 ).sumOf {
-    it.values.map { 1 + it.first().last.toLong() - it.first().first.toLong() }.reduce{ acc, v -> acc * v }
+    it.values.map { 1 + it.last.toLong() - it.first.toLong() }.reduce { acc, v -> acc * v }
 }
 
 fun main() {
