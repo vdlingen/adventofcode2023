@@ -52,7 +52,9 @@ data class Grid(private val data: List<String>) {
     val Coord.isValid get() = x in 0..<width && y in 0..<height
 
     fun Coord.neighbors(directions: List<Direction> = Directions.All) =
-        directions.map { it.transform(this) }.filter { it.isValid }
+        unvalidatedNeighbors(directions).filter { it.isValid }
+
+    fun Coord.unvalidatedNeighbors(directions: List<Direction> = Directions.All) = directions.map { it.transform(this) }
 
     fun Coord.move(direction: Direction) = direction.transform(this).takeIf { it.isValid }
 
