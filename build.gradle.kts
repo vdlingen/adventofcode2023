@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation(files("lib/com.microsoft.z3.jar"))
 }
 
 tasks.test {
